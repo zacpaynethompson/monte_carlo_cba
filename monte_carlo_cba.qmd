@@ -1,0 +1,1094 @@
+---
+title: Monte Carlo Simulations for Cost Benefit Analysis
+subtitle: A discussion
+format:
+  clean-revealjs:
+    self-contained: true
+author:
+  - name: Zac Payne-Thompson
+    orcid: Head of Data Tools and Insights
+    email: zachary.payne-thompson@dcms.gov.uk
+    affiliations: The Department for Culture, Media and Sport
+date: last-modified
+---
+
+```{r, echo=FALSE, results='hide'}
+source("monte_carlo_cba.R")
+```
+## Contents
+
+Pre-requisites
+
+- Brief History of CBA
+- Outline of current workflow in green book
+- What do we mean by sensitivities?
+	  
+Analysis
+
+- Overview of distributions
+- Monte Carlo analysis
+- Interlude on Optimism Bias
+- Distributional approaches
+
+## Contents
+  	
+Evaluation
+
+- What would this mean in practice?
+  	
+Reflection
+
+- Does this matter?
+
+# A Brief History of CBA {background-color="#40666e"}
+
+## {background-image="images/Screenshot 2023-11-02 at 08.43.01.png" background-size="50%"}
+
+
+::: {.notes}
+Cost-Benefit Analysis, or CBA, is a powerful decision-making tool that quantifies the costs and benefits of various projects or policies. To understand its historical context, we need to go back to the 20th century, a period marked by significant changes in the role of central governments.
+
+In the United States and elsewhere, central governments grew substantially during this time, and this growth played a crucial role in the evolution of CBA. It was in 1936, during the New Deal era in the United States, that CBA was first employed. Congress ordered government agencies to use CBA to evaluate projects related to flood control.
+
+The use of CBA became increasingly popular among administrative agencies as the federal government continued to expand. But to truly appreciate the development of CBA, we must also consider the influence of Progressivism and the birth of welfare economics. These ideological shifts separated value-laden politics from the realm of administrative expertise grounded in scientific principles.
+:::
+
+
+
+## Historical Development of CBA {background-image="images/Franklin-D-Roosevelt-Henry-Wallace-farm-relief-bill-1933.webp" background-size="50%"}
+
+### The New Deal Era
+
+
+::: {.notes}
+The New Deal government's adoption of CBA in 1936 was a pivotal moment in its history, as it marked the first official use of CBA in a government context.
+
+As the central government in the United States and other countries continued to grow, CBA gained rapid popularity among administrative agencies. This growth was not isolated; it was influenced by the rise of Progressivism during the late 19th and early 20th centuries. Progressives believed in the separation of politics, driven by values, from administrative decisions grounded in scientific principles.
+
+This ideological shift paved the way for the development of modern welfare economics, which supplied the scientific principles necessary for the implementation of CBA. Early welfare economists believed that economic concepts could rationalise government policies, and their efforts gained further momentum in the 1950s and 1960s when governments sought technical assistance in developing formal CBA procedures.
+:::
+
+## Addressing the issues of Pareto Efficiency
+
+### The Hicks-Kaldor Compensation Principle
+
+:::{.callout-note}
+## Definition
+
+An allocative (i) change (ii) increases efficiency if the gainers from the change are (iii)
+capable of compensating the losers and still coming out ahead.
+
+Each individual’s gain or loss is defined as the value of a hypothetical monetary
+compensation that would keep each individual (in his or her own judgement) indifferent to
+the change
+
+Cost-benefit analysis examines whether policy changes satisfy the compensation principle or
+not
+:::
+
+
+::: {.notes}
+Now, let's explore the evolution of the principles underlying Cost-Benefit Analysis. Vilfredo Pareto played a crucial role by introducing the Pareto principle, which stated that a project is desirable if it makes at least one person better off without making anyone else worse off. While this principle laid the foundation for CBA, it was soon recognized as being too stringent in practice.
+
+This led to the introduction of compensation tests by economists like J.R. Kaldor and Nicholas Hicks. Compensation tests proposed that a project is desirable if its beneficiaries are enriched enough that they could overcompensate those who are hurt by the project. These tests significantly expanded the range of projects that could be evaluated using CBA and ultimately became the basis for modern CBA.
+:::
+
+## Addressing the issues of Pareto Efficiency {background-image="images/Screenshot 2023-11-02 at 09.04.37.png" background-size="50%"}
+
+### The Hicks-Kaldor Compensation Principle
+
+
+::: {.notes}
+Now, let's explore the evolution of the principles underlying Cost-Benefit Analysis. Vilfredo Pareto played a crucial role by introducing the Pareto principle, which stated that a project is desirable if it makes at least one person better off without making anyone else worse off. While this principle laid the foundation for CBA, it was soon recognized as being too stringent in practice.
+
+This led to the introduction of compensation tests by economists like J.R. Kaldor and Nicholas Hicks. Compensation tests proposed that a project is desirable if its beneficiaries are enriched enough that they could overcompensate those who are hurt by the project. These tests significantly expanded the range of projects that could be evaluated using CBA and ultimately became the basis for modern CBA.
+:::
+
+## CBA in Practice
+
+### CBA Popularity and Doubts in the 1960s and 1970s
+
+::: incremental
+- In the 1960s, Cost-Benefit Analysis (CBA) gained popularity, even though there was no clear consensus on its theoretical foundation.
+- Government agencies and applied economists embraced CBA during this period.
+- However, by the 1970s, doubts started to emerge regarding the utility of CBA, both theoretically and practically.
+- These doubts were not just theoretical but also related to challenges and criticisms in applying CBA to real-world decision-making.
+:::
+
+## CBA in Practise
+
+### The **Real** Practice of CBA
+
+::: incremental
+- While CBA is taught in textbooks with specific methodologies, its practical application in government agencies often differs.
+- Agencies may adapt CBA to their specific needs, using it as a tool to rationalize decisions made for various reasons, including political and administrative considerations.
+- It's not uncommon for agencies to deviate from standard CBA procedures without always providing a clear rationale.
+- The actual practice of CBA can be influenced by external factors such as legal constraints, data availability, and practical limitations.
+:::
+
+# CBA in the Green Book {background-color="#40666e"}
+
+## CBA in the Green Book
+
+### The Appraisal Process
+
+::: incremental
+1) Define the Problem
+2) Establish Objectives
+3) Identify Options
+4) Appraise Options
+5) Sensitivity Analysis
+6) Decision Making
+7) Implementation and Monitoring
+:::
+
+
+::: {.notes}
+Introduction
+- The Green Book is the UK Government's guide for conducting appraisals of public sector projects and policies.
+- The appraisal process is designed to assess the economic, financial, social, and environmental impacts of proposed initiatives.
+
+Key Steps in Appraisal
+
+1. Define the Problem
+- Clearly articulate the problem that the policy or project intends to address.
+- Understand the underlying causes and set objectives.
+
+2. Establish Objectives
+- Define specific, measurable, and achievable objectives for each option.
+- Objectives should cover economic, social, and environmental aspects.
+
+3. Identify Options
+- Develop a range of possible options to address the problem.
+- Include a "do-nothing" option as a baseline for comparison.
+
+4. Appraise Options
+- Conduct a rigorous assessment of each option, including a detailed cost-benefit analysis.
+- Consider the present value of costs and benefits over a specified timeframe.
+- Use appropriate discount rates to account for the time value of money.
+
+5. Sensitivity Analysis
+- Test the robustness of the appraisal by varying key assumptions and parameters.
+- Assess how changes in inputs impact the results.
+
+6. Decision Making
+- Compare the outcomes of the different options, considering not only financial but also social and environmental impacts.
+- Make informed decisions based on the appraisal results.
+
+7. Implementation and Monitoring
+- Once a decision is made, implement the chosen option.
+- Establish a monitoring framework to track the actual performance against the expected outcomes.
+
+Conclusion
+- The Green Book's appraisal process ensures that public sector decisions are based on a comprehensive and systematic evaluation of options.
+- It promotes transparency, accountability, and evidence-based policymaking.
+:::
+
+
+## CBA in the Green Book
+
+### Sensitivity Analysis
+
+::: {.callout-note}
+## Definition
+- Sensitivity analysis explores how the expected outcomes of an intervention are sensitive to variations in key input variables.
+- It helps understand the impact of changing assumptions on project feasibility and preferred options.
+:::
+
+A key concept is the [Switching Value:]{.bg style="--col: #e64173"} The value at which a key input variable would need to change to switch from a recommended option to another or for a proposal not to receive funding.
+
+Identifying switching values is crucial to decision-making.
+
+
+## CBA in the Green Book
+
+### Sensitivity Analysis
+
+| Variable                              | Value                     |
+|---------------------------------------|---------------------------|
+| Site area                             | 39 acre                   |
+| Existing use land value estimate     | £30,659 per acre          |
+| Future use land value estimate       | £200,000 per acre         |
+| Land value uplift per acre           | £169,341 per acre         |
+| Total land value uplift               | £6.6m                     |
+| Wider social benefits                 | £1.4m                     |
+| Present Value Benefits (PVB)         | £8m                       |
+| Present Value Cost (PVC)             | £10m                      |
+| Benefit Cost Ratio (BCR = PVB / PVC)  | 0.8                       |
+| Net Present Social Value (NPSV)      | -£2m                      |
+
+
+::: {.notes}
+Officials are appraising the treatment of a 39 acre contaminated land site, to be funded by a public sector grant. The remediation of the land would enable new businesses to move close to an existing cluster of businesses in a highly productive sector. The benefits of the intervention can be estimated by the change in the land value of the site (land value uplift). There is data on the current value and likely value of the land post remediation. 
+
+The total benefits are £8m when wider social benefits are added to the increase in land value as a result of the remediation. The costs of the remediation exceed the benefits so the BCR is less than 1 and the NPSV is negative. The switching value to turn the NPSV positive, so benefits outweigh costs, would be an approximate future land use value of £251,000 per acre equal to a land value uplift of approximately £221,000 per acre.
+:::
+
+
+## CBA in the Green Book
+
+### Optimism Bias
+
+::: {.callout-note}
+## Definition
+Optimism bias is the demonstrated systematic tendency for appraisers to be over-optimistic about key project parameters, including capital costs, operating costs, project duration and benefits delivery. 
+:::
+
+::: incremental
+- Adjust for optimism bias to provide a realistic assessment of project estimates.
+
+- Adjustments should align with risk avoidance and mitigation measures, with robust evidence required before reductions. 
+
+- Apply optimism bias adjustments to operating and capital costs. Use confidence intervals for key input variables when typical bias measurements are unavailable.
+:::
+
+
+## CBA in the Green Book
+
+### Monte Carlo Analysis
+
+::: {.callout-note}
+*Monte Carlo analysis is a simulation-based risk modelling technique that produces expected values and confidence intervals. The outputs are the result of many simulations that model the collective impact of a number of uncertainties.*
+
+*It is useful when there are a number of variables with significant uncertainties, which have known, or reasonably estimated, independent probability distributions.* 
+
+*It requires a well estimated model of the likely impacts of an intervention and expert professional input from an operational researcher, statistician, econometrician, or other experienced practitioner.*
+:::
+
+
+::: {.notes}
+The technique is useful where variations in key inputs are expected and where they are associated with significant levels of risk mitigation costs, such as flood prevention. This can be used to determine what level of investment might be required to deal with extreme events such as rainfall events, which will have a statistical likelihood.
+:::
+
+
+# Monte Carlo Simulations for CBA {background-color="#40666e"}
+
+## Monte Carlo Simulations for CBA
+
+### Data and Setup
+
+| project_id |   low   | central |   high   |
+|:---------:|:-------:|:-------:|:-------:|
+|     1     | 64.37888| 159.9989| 223.8726|
+|     2     | 89.41526| 133.2824| 296.2359|
+|     3     | 70.44885| 148.8613| 260.1366|
+|     4     | 94.15087| 195.4474| 424.4830|
+|     5     | 97.02336| 148.2902| 471.6297|
+|     6     | 52.27782| 189.0350| 288.0247|
+|     7     | 76.40527| 191.4438| 236.4092|
+|     8     | 94.62095| 160.8735| 684.4839|
+|     ...     | ...| ...| ...|
+
+
+## Monte Carlo Simulations for CBA
+
+### Data and Setup
+
+::: incremental
+- **Objective**: Create functions to generate different cost distributions based on user-specified parameters.
+
+- **Process**:
+  - Each function generates a sequence of possible project-level costs based on user-defined "high" and "low" values.
+  - Depending on the chosen distribution assumption, a probability distribution function is applied to create a vector of probabilities.
+  - The `sample()` function is used to randomly sample cost values from the sequence, with replacement, using the assumed probability distribution.
+:::
+
+
+## Monte Carlo Simulations for CBA
+
+### Data and Setup
+
+::: incremental
+- **Total Cost Distributions**:
+  - These functions are applied to the project dataset to calculate total costs.
+  - The result is a vector of possible total project costs that can be plotted as a distribution.
+  - This approach allows for the exploration of different cost scenarios and provides a basis for risk analysis in project management.
+:::
+
+
+
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 1) Uniform Distribution
+
+Project costs are modeled using a uniform distribution spanning low to 
+high.
+
+``` r
+uniform_1 <- function(low, high){
+  
+}
+```
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 1) Uniform Distribution
+
+Project costs are modeled using a uniform distribution spanning low to 
+high.
+
+``` r
+uniform_1 <- function(low, high){
+  
+  # Set of possible costs
+  sequence <- seq(from = 0, to = sum(data$high), by = 1)
+  
+}
+```
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 1) Uniform Distribution
+
+Project costs are modeled using a uniform distribution spanning low to 
+high.
+
+``` r
+uniform_1 <- function(low, high){
+  
+  # Set of possible costs
+  sequence <- seq(from = 0, to = sum(data$high), by = 1)
+  
+  # Uniform Probability distribution function
+  distribution <- dunif(sequence, min = low, max = high)
+  
+}
+```
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 1) Uniform Distribution
+
+Project costs are modeled using a uniform distribution spanning low to 
+high.
+
+``` r
+uniform_1 <- function(low, high){
+  
+  # Set of possible costs
+  sequence <- seq(from = 0, to = sum(data$high), by = 1)
+  
+  # Uniform Probability distribution function
+  distribution <- dunif(sequence, min = low, max = high)
+  
+  # Sampling from possible costs using the assumed distribution function
+  sample(x = sequence, size = 10000, replace = T, prob = distribution)
+  
+}
+```
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 1) Uniform Distribution
+
+```{r}
+#| echo: false
+uniform_1(low = data$low[1], high = data$high[1]) %>%
+  as.data.frame() %>% 
+  ggplot() + 
+  geom_density(aes(x = .), lwd = 1.5) +
+  theme_minimal() +
+  labs(title = "Project Cost Distribution",
+       subtitle = "Uniform",
+       y  = "Likelihood",
+       x  = "Total Cost (£)") +
+  geom_vline(aes(xintercept = sum(data$central[1])), color = "red") +
+  geom_vline(aes(xintercept = sum(data$low[1])), color = "blue") +
+  geom_vline(aes(xintercept = sum(data$high[1])), color = "blue")
+```
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 1) Uniform Distribution
+
+
+```{r}
+#| echo: false
+mapply(uniform_1, data$low, data$high) %>% 
+  rowSums() %>%
+  as.data.frame() %>% 
+  ggplot() + 
+  theme_minimal() +
+  geom_density(aes(x = .)) +
+  labs(title = "Cost Distribution",
+       subtitle = "Uniform",
+       y  = "Likelihood",
+       x  = "Total Cost (£)") +
+  geom_vline(aes(xintercept = sum(data$central)), color = "red") +
+  geom_vline(aes(xintercept = sum(data$low)), color = "blue") +
+  geom_vline(aes(xintercept = sum(data$high)), color = "blue")
+```
+
+
+::: {.notes}
+Applying the function to the data and finding the sum of each row gives the total cos across 10000 different simulations.
+
+This provides a normally distributed cost estimate at due to the central limit theorem.
+
+As the only parameters used to model the distribution of project costs were the high and low estimates, this means that the total cost does 
+not represent any skew caused by the central estimate. 
+:::
+
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 2) Normal Distribution (without a central estimate)
+
+Project costs are modeled using a normal distribution with a mean defined as the midpoint between high and low, and a standard deviationthat is 1/4 of the distance between high and low.
+
+This means that, if the data is truly normally distributed, then the low and high estimates represent the 95% confidence interval for an individual project's cost.
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 2) Normal Distribution (without a central estimate)
+
+This function looks like:
+
+``` r
+normal_2 <- function(low, high){
+  
+}
+```
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 2) Normal Distribution (without a central estimate)
+
+This function looks like:
+
+``` r
+normal_2 <- function(low, high){
+  
+  # Set of possible costs
+  sequence <- seq(from = 0, to = sum(data$high), by = 1)
+
+}
+```
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 2) Normal Distribution (without a central estimate)
+
+This function looks like:
+
+``` r
+normal_2 <- function(low, high){
+  
+  # Set of possible costs
+  sequence <- seq(from = 0, to = sum(data$high), by = 1)
+  
+  # Mean equal to the midpoint between low and high
+  mean_x = (high-low)/2+low
+  
+}
+```
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 2) Normal Distribution (without a central estimate)
+
+This function looks like:
+
+``` r
+normal_2 <- function(low, high){
+  
+  # Set of possible costs
+  sequence <- seq(from = 0, to = sum(data$high), by = 1)
+  
+  # Mean equal to the midpoint between low and high
+  mean_x = (high-low)/2+low
+  
+  # Standard Deviation equal to 1/4 of the distance between low and high
+  sd_x = (high-low)/4
+  
+}
+```
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 2) Normal Distribution (without a central estimate)
+
+This function looks like:
+
+``` r
+normal_2 <- function(low, high){
+  
+  # Set of possible costs
+  sequence <- seq(from = 0, to = sum(data$high), by = 1)
+  
+  # Mean equal to the midpoint between low and high
+  mean_x = (high-low)/2+low
+  
+  # Standard Deviation equal to 1/4 of the distance between low and high
+  sd_x = (high-low)/4
+  
+  # Normal Probability Distribution Function
+  distribution <- dnorm(sequence, mean = mean_x, sd = sd_x)
+  
+}
+```
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 2) Normal Distribution (without a central estimate)
+
+This function looks like:
+
+``` r
+normal_2 <- function(low, high){
+  
+  # Set of possible costs
+  sequence <- seq(from = 0, to = sum(data$high), by = 1)
+  
+  # Mean equal to the midpoint between low and high
+  mean_x = (high-low)/2+low
+  
+  # Standard Deviation equal to 1/4 of the distance between low and high
+  sd_x = (high-low)/4
+  
+  # Normal Probability Distribution Function
+  distribution <- dnorm(sequence, mean = mean_x, sd = sd_x)
+  
+  # Sampling from possible costs using the assumed distribution function
+  sample(x = sequence, size = 10000, replace = T, prob = distribution)
+  
+}
+```
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 2) Normal Distribution (without a central estimate)
+
+```{r}
+#| echo: false
+normal_2(low = data$low[1], high = data$high[1]) %>%
+  as.data.frame() %>% 
+  ggplot() + 
+  geom_density(aes(x = .)) +
+  theme_minimal() +
+  labs(title = "Project Cost Distribution",
+       subtitle = "Normal (without central)",
+       y  = "Likelihood",
+       x  = "Total Cost (£)") +
+  geom_vline(aes(xintercept = sum(data$central[1])), color = "red")
+```
+
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 2) Normal Distribution (without a central estimate)
+
+```{r}
+#| echo: false
+mapply(normal_2, data$low, data$high) %>% 
+  rowSums() %>%
+  as.data.frame() %>% 
+  ggplot() + 
+  geom_density(aes(x = .)) +
+  theme_minimal() +
+  labs(title = "Total Cost Distribution",
+       subtitle = "Normal (without central)",
+       y  = "Likelihood",
+       x  = "Total Cost (£)") +
+  geom_vline(aes(xintercept = sum(data$central)), color = "red") +
+  geom_vline(aes(xintercept = sum(data$low)), color = "blue") +
+  geom_vline(aes(xintercept = sum(data$high)), color = "blue")
+```
+
+
+::: {.notes}
+This provides a normally distributed total cost estimate which is tighter than if sampled from a set of uniformly distributed project level costs.
+
+Again, this does not involved the central cost estimate therefore  gives a normal distribution which is centered around the mid point between low and high, but with a 90% confidence interval smaller than example 1)
+:::
+
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 3) Normal Distribution (including a central estimate)
+
+As before, except the mean of the normal distribution is assumed to be the central value.
+
+``` r
+normal_3 <- function(low, central, high){
+  
+}
+```
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 3) Normal Distribution (including a central estimate)
+
+As before, except the mean of the normal distribution is assumed to be the central value.
+
+``` r
+normal_3 <- function(low, central, high){
+  
+  # Set of possible costs
+  sequence <- seq(from = 0, to = sum(data$high), by = 1)
+  
+}
+```
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 3) Normal Distribution (including a central estimate)
+
+As before, except the mean of the normal distribution is assumed to be the central value.
+
+``` r
+normal_3 <- function(low, central, high){
+  
+  # Set of possible costs
+  sequence <- seq(from = 0, to = sum(data$high), by = 1)
+  
+  # Mean equal to the central project cost estimate
+  mean_x = central
+  
+}
+```
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 3) Normal Distribution (including a central estimate)
+
+As before, except the mean of the normal distribution is assumed to be the central value.
+
+``` r
+normal_3 <- function(low, central, high){
+  
+  # Set of possible costs
+  sequence <- seq(from = 0, to = sum(data$high), by = 1)
+  
+  # Mean equal to the central project cost estimate
+  mean_x = central
+  
+  # Standard Deviation equal to 1/4 of the distance between low and high
+  sd_x = (high-low)/4
+  
+}
+```
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 3) Normal Distribution (including a central estimate)
+
+As before, except the mean of the normal distribution is assumed to be the central value.
+
+``` r
+normal_3 <- function(low, central, high){
+  
+  # Set of possible costs
+  sequence <- seq(from = 0, to = sum(data$high), by = 1)
+  
+  # Mean equal to the central project cost estimate
+  mean_x = central
+  
+  # Standard Deviation equal to 1/4 of the distance between low and high
+  sd_x = (high-low)/4
+  
+  # Normal Probability Distribution Function
+  distribution <- dnorm(sequence, mean = mean_x, sd = sd_x)
+  
+}
+```
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 3) Normal Distribution (including a central estimate)
+
+As before, except the mean of the normal distribution is assumed to be the central value.
+
+``` r
+normal_3 <- function(low, central, high){
+  
+  # Set of possible costs
+  sequence <- seq(from = 0, to = sum(data$high), by = 1)
+  
+  # Mean equal to the central project cost estimate
+  mean_x = central
+  
+  # Standard Deviation equal to 1/4 of the distance between low and high
+  sd_x = (high-low)/4
+  
+  # Normal Probability Distribution Function
+  distribution <- dnorm(sequence, mean = mean_x, sd = sd_x)
+  
+  # Sampling from possible costs using the assumed distribution function
+  sample(x = sequence, size = 10000, replace = T, prob = distribution)
+  
+}
+```
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 3) Normal Distribution (including a central estimate)
+
+```{r}
+#| echo: false
+normal_3(low = data$low[1], 
+         central = data$central[1], 
+         high = data$high[1]) %>%
+  as.data.frame() %>% 
+  ggplot() + 
+  geom_density(aes(x = .)) +
+  theme_minimal() +
+  labs(title = "Project Cost Distribution",
+       subtitle = "Normal (with central)",
+       y  = "Likelihood",
+       x  = "Total Cost (£)") +
+  geom_vline(aes(xintercept = sum(data$central[1])), color = "red") +
+  geom_vline(aes(xintercept = sum(data$low[1])), color = "blue") +
+  geom_vline(aes(xintercept = sum(data$high[1])), color = "blue")
+```
+
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 3) Normal Distribution (including a central estimate)
+
+```{r}
+#| echo: false
+mapply(normal_3, data$low, data$central, data$high) %>% 
+  rowSums() %>%
+  as.data.frame() %>% 
+  ggplot() + 
+  geom_density(aes(x = .)) +
+  theme_minimal() +
+  labs(title = "Total Cost Distribution",
+       subtitle = "Normal (with central)",
+       y  = "Likelihood",
+       x  = "Total Cost (£)") +
+  geom_vline(aes(xintercept = sum(data$central)), color = "red") +
+  geom_vline(aes(xintercept = sum(data$low)), color = "blue") +
+  geom_vline(aes(xintercept = sum(data$high)), color = "blue")
+```
+
+
+::: {.notes}
+This provides a normally distributed total cost estimate which is anchored to the central cost estimate. 
+
+Due to the central limit theorem, this is still a symmetric cost distribution and treats low and high estimates as cost limits.
+:::
+
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 4) Log-Normal Distribution
+
+::: incremental
+- Are costs and benefits really normally distributed?
+
+- By definition, they can only be positive.
+
+- But the upper limit could be infinite? 
+    - What is the *real* benefit of Net Zero e.g, the existence of the human race?
+    - Similarly, what would be the cost of a race of hostile aliens enslaving humanity?
+    - In either case - probably a lot!
+:::
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 4) Log-Normal Distribution
+
+- Are costs and benefits really normally distributed?
+
+- By definition, they can only be positive.
+
+- But the upper limit could be infinite? 
+    - What is the *real* benefit of Net Zero e.g, the existence of the human race?
+    - Similarly, what would be the cost of a race of hostile aliens enslaving humanity?
+    - In either case - probably a lot!
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 4) Log-Normal Distribution
+
+::: {.callout-note}
+# A solution
+The Log-Normal distribution allows for a right skew  and long upper tail while using the same input parameters as a normal distribution. 
+:::
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 4) Log-Normal Distribution
+
+In the context of cost estimation for a project, we can leverage the Cumulative Density Function (CDF) of the Log-Normal distribution to calculate the mu (μ) and sigma (σ) parameters required to achieve a distribution where approximately 95% of estimates fall between the low and high cost estimates.
+
+To achieve this, we need to establish a relationship between our central project cost estimate and the relevant formula. However, this approach relies on an assumption about what the central estimate represents.
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 4) Log-Normal Distribution
+
+::: {callout-note}
+One potential statistic that relates our three project cost estimates to the distribution parameters is the mode. 
+
+Assuming that the central cost estimate represents the most likely outcome, it corresponds to the peak of the probability distribution, making it the mode. 
+:::
+
+The mode of the Log-Normal distribution is given by the formula:
+
+$$mode = e^{\mu - \sigma^2} = central$$
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 4) Log-Normal Distribution
+
+Solving for mu (μ) gives us:
+
+$$\mu = \log(mode) + \sigma^2 = \log(central) + \sigma^2$$
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 4) Log-Normal Distribution
+
+::: incremental
+- Therefore, we need to find the value of sigma (σ) that results in approximately 95% of our project cost estimates falling between the high cost and low cost estimates.
+
+- This can be calculated by finding the difference between the Log-Normal CDF evaluated at the high cost estimate and the low cost estimate. 
+
+- For a practical illustration, we can utilize the data from the first project.
+:::
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 4) Log-Normal Distribution
+
+First defining an open function
+
+``` r
+f <- function(sigma){
+  
+  # The relationship between mode (central), mu and sigma
+  mu <- log(data$central[1]) + sigma^2
+  
+  # The difference between the CDF at high and CDF at low where 95% 
+  # of estimates fall
+  abs(plnorm(data$high[1], mu, sigma) - plnorm(data$low[1], mu, sigma) - 0.95)
+  
+}
+```
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 4) Log-Normal Distribution
+
+``` r
+# Next using optimize to search the interval from lower to upper for a 
+# minimum of the function f with respect to the first argument, sigma.
+optimize(f, lower = 0, upper = 1)
+```
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 4) Log-Normal Distribution
+
+``` r
+# Next using optimize to search the interval from lower to upper for a 
+# minimum of the function f with respect to the first argument, sigma.
+optimize(f, lower = 0, upper = 1)
+
+# Selecting the minimum from the tibble, this is the optimal sigma
+sigma_test <- optimize(f, lower = 0, upper = 1)$minimum
+```
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 4) Log-Normal Distribution
+
+``` r
+# Next using optimize to search the interval from lower to upper for a 
+# minimum of the function f with respect to the first argument, sigma.
+optimize(f, lower = 0, upper = 1)
+
+# Selecting the minimum from the tibble, this is the optimal sigma
+sigma_test <- optimize(f, lower = 0, upper = 1)$minimum
+
+# Plugging this back into the formula for the mean 
+mu_test <- (log(data$central[1]) + sigma_test^2) 
+```
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 4) Log-Normal Distribution
+
+``` r
+# Next using optimize to search the interval from lower to upper for a 
+# minimum of the function f with respect to the first argument, sigma.
+optimize(f, lower = 0, upper = 1)
+
+# Selecting the minimum from the tibble, this is the optimal sigma
+sigma_test <- optimize(f, lower = 0, upper = 1)$minimum
+
+# Plugging this back into the formula for the mean 
+mu_test <- (log(data$central[1]) + sigma_test^2) 
+
+# Now using these to simulate a distribution
+N <- 10000000
+nums <- rlnorm(N, mu_test, sigma_test)
+```
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 4) Log-Normal Distribution
+
+``` r
+# Next using optimize to search the interval from lower to upper for a 
+# minimum of the function f with respect to the first argument, sigma.
+optimize(f, lower = 0, upper = 1)
+
+# Selecting the minimum from the tibble, this is the optimal sigma
+sigma_test <- optimize(f, lower = 0, upper = 1)$minimum
+
+# Plugging this back into the formula for the mean 
+mu_test <- (log(data$central[1]) + sigma_test^2) 
+
+# Now using these to simulate a distribution
+N <- 10000000
+nums <- rlnorm(N, mu_test, sigma_test)
+
+# Now testing how many values lie between Low and High
+sum(data$low[1] < nums & nums < data$high[1]) / N
+```
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 4) Log-Normal Distribution
+
+``` r
+# Next using optimize to search the interval from lower to upper for a 
+# minimum of the function f with respect to the first argument, sigma.
+optimize(f, lower = 0, upper = 1)
+
+# Selecting the minimum from the tibble, this is the optimal sigma
+sigma_test <- optimize(f, lower = 0, upper = 1)$minimum
+
+# Plugging this back into the formula for the mean 
+mu_test <- (log(data$central[1]) + sigma_test^2) 
+
+# Now using these to simulate a distribution
+N <- 10000000
+nums <- rlnorm(N, mu_test, sigma_test)
+
+# Now testing how many values lie between Low and High
+sum(data$low[1] < nums & nums < data$high[1]) / N
+```
+
+``` {r}
+sum(data$low[1] < nums & nums < data$high[1]) / N
+```
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 4) Log-Normal Distribution
+
+```{r}
+#| echo: false
+log_normal_4(low = data$low[1],
+             central = data$central[1],
+             high = data$high[1]) %>%
+  as.data.frame() %>%
+  ggplot() +
+  geom_density(aes(x = .), lwd=1.5) +
+  theme_minimal() +
+  labs(title = "Project Cost Distribution",
+       subtitle = "Log-Normal",
+       y  = "Likelihood",
+       x  = "Total Cost") +
+  geom_vline(aes(xintercept = sum(data$central[1])), color = "red") +
+  geom_vline(aes(xintercept = sum(data$low[1])), color = "blue") +
+  geom_vline(aes(xintercept = sum(data$high[1])), color = "blue")
+```
+
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### 4) Log-Normal Distribution
+
+```{r}
+#| echo: false
+mapply(log_normal_4, data$low, data$central, data$high) %>%
+  rowSums() %>%
+  as.data.frame() %>%
+  ggplot() +
+  geom_density(aes(x = .), lwd=1.5) +
+  #theme_beis() +
+  labs(title = "Total Cost Distribution",
+       subtitle = "Log-Normal",
+       y  = "Likelihood",
+       x  = "Total Cost") +
+  geom_vline(aes(xintercept = sum(data$central)), color = "red") +
+  geom_vline(aes(xintercept = sum(data$low)), color = "blue") +
+  geom_vline(aes(xintercept = sum(data$high)), color = "blue")
+```
+
+## Monte Carlo Simulations for CBA {auto-animate="true"}
+
+### Comparison
+
+```{r}
+# 1) Uniform
+dist_dat_1 <- data.frame(Distribution = "Uniform",
+                         Cost = mapply(uniform_1,
+                                       data$low,
+                                       data$high) %>%
+                           rowSums())
+
+# 2) Normal (without central)
+dist_dat_2 <- data.frame(Distribution = "Normal (without central)",
+                         Cost = mapply(normal_2,
+                                       data$low,
+                                       data$high) %>%
+                           rowSums())
+
+# 3) Normal (with central)
+dist_dat_3 <- data.frame(Distribution = "Normal (with central)",
+                         Cost = mapply(normal_3,
+                                       data$low,
+                                       data$central,
+                                       data$high) %>%
+                           rowSums())
+
+# 3) Log-Normal
+dist_dat_4 <- data.frame(Distribution = "Log-Normal",
+                         Cost = mapply(log_normal_4,
+                                       data$low,
+                                       data$central,
+                                       data$high) %>%
+                           rowSums())
+
+# Joining
+dist_dat <- rbind(dist_dat_1, dist_dat_2, dist_dat_3, dist_dat_4)
+
+
+# Plotting aggregated cost distributions by project level cost distribution
+# assumption.
+
+dist_dat %>%
+  #filter(Distribution %in% c("Uniform", "Log-Normal")) %>%
+  ggplot() +
+  geom_density(aes(x = Cost, color = Distribution), lwd=1.5) +
+  geom_vline(aes(xintercept = sum(data$central)), color = "red") +
+  geom_vline(aes(xintercept = sum(data$low)), color = "blue") +
+  geom_vline(aes(xintercept = sum(data$high)), color = "blue") +
+  theme_minimal() +
+  labs(title = "Total Cost Distribution",
+       y  = "Likelihood",
+       x  = "Total Cost")
+```
+
+# Reflection {background-color="#40666e"}
+
+## Reflection
+
+### Questions for the audience
+
+::: incremental
+- Does this matter?
+- What is the point of CBA?
+- Would this make policy better? And importantly, does it increase VfM for the tax payer?
+:::
+
+# Thank you {background-color="#40666e"}
